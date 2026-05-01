@@ -1,0 +1,89 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AlgorithmProject;
+
+public static class HtmlHighlighter
+{
+public static string Highlight(string text, List<int> positions, int patternLength)
+{
+    if (positions.Count == 0)
+        return WrapInPage(EscapeText(text));
+
+    // Sort positions and merge overlapping intervals
+    positions.Sort();
+    var intervals = MergeIntervals(positions, patternLength);
+
+    // Build the output by walking through text and inserting tags
+    var sb = new StringBuilder(text.Length + intervals.Count * 15);
+    int prev = 0;
+    foreach (var (start, end) in intervals)
+    {
+        // Text before this highlighted region (raw — may contain HTML tags)
+        sb.Append(text, prev, start - prev);
+        sb.Append("<mark>");
+        sb.Append(text, start, end - start);
+        sb.Append("</mark>");
+        prev = end;
+    }
+    sb.Append(text, prev, text.Length - prev);
+
+    return WrapInPage(sb.ToString());
+}
+
+// ------------------------------------------------------------------
+// Helpers
+// ------------------------------------------------------------------
+
+/// <summary>
+/// Merge overlapping / adjacent [start, start+len) intervals.
+/// Returns a list of (start, end) pairs.
+/// </summary>
+private static List<(int start, int end)> MergeIntervals(List<int> positions, int len)
+{
+    var merged = new List<(int, int)>();
+    int curStart = positions[0];
+    int curEnd = positions[0] + len;
+
+    for (int i = 1; i < positions.Count; i++)
+    {
+        int s = positions[i];
+        int e = s + len;
+        if (s < curEnd)                 // overlapping or adjacent
+            curEnd = Math.Max(curEnd, e);
+        else
+        {
+            merged.Add((curStart, curEnd));
+            curStart = s;
+            curEnd = e;
+        }
+    }
+    merged.Add((curStart, curEnd));
+    return merged;
+}
+
+/// <summary>
+/// Escape &amp;, &lt;, &gt; for plain-text display (used only when there
+/// are no matches and the text is treated as plain text).
+/// When the text is already HTML we do NOT escape it.
+/// </summary>
+private static string EscapeText(string text) => text; // raw HTML preserved
+
+private static string WrapInPage(string body)
+{
+    return "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n" +
+           "  <meta charset=\"UTF-8\">\n" +
+           "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+           "  <title>String Matching Output</title>\n" +
+           "  <style>\n" +
+           "    mark { background-color: #FFD700; color: #000; border-radius: 2px; }\n" +
+           "    body { font-family: monospace; white-space: pre-wrap; word-break: break-all; padding: 1em; }\n" +
+           "  </style>\n" +
+           "</head>\n<body>\n" +
+           body +
+           "\n</body>\n</html>";
+}
+}
