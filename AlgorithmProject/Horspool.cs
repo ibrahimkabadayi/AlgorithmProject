@@ -37,7 +37,7 @@ internal class Horspool : IStringMatcher
         foreach (var kv in table)
             Console.WriteLine($"  '{kv.Key}'          {kv.Value,6}");
 
-        Console.WriteLine($"  (other)       {m,6}   ← default");
+        Console.WriteLine($"  (other)       {m,5}");
     }
 
     public SearchResult Search(string text, string pattern)

@@ -7,13 +7,11 @@ public class Program
         Console.WriteLine("=== String Matching Algorithm Comparison ===");
         Console.WriteLine("CSE 2046/2246 - Analysis of Algorithms\n");
 
-        // Run small correctness test cases first
         RunCorrectnessTests();
 
-        // Interactive mode
         Console.WriteLine("\n--- Interactive Mode ---");
         Console.Write("Enter path to HTML file (or press Enter to skip): ");
-        string filePath = Console.ReadLine()?.Trim();
+        string? filePath = Console.ReadLine()?.Trim();
 
         if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
         {
@@ -92,10 +90,10 @@ public class Program
         {
             var result = algo.Search(text, pattern);
             Console.WriteLine($"[{algo.Name}]");
-            Console.WriteLine($"  Occurrences        : {result.Occurrences.Count}");
-            Console.WriteLine($"  Positions          : [{string.Join(", ", result.Occurrences)}]");
-            Console.WriteLine($"  Character Comparisons: {result.Comparisons}");
-            Console.WriteLine($"  Running Time       : {result.ElapsedMs:F4} ms");
+            Console.WriteLine($"  Occurrences           : {result.Occurrences.Count}");
+            Console.WriteLine($"  Positions             : [{string.Join(", ", result.Occurrences)}]");
+            Console.WriteLine($"  Character Comparisons : {result.Comparisons}");
+            Console.WriteLine($"  Running Time          : {result.ElapsedMs:F4} ms");
             Console.WriteLine();
         }
 
