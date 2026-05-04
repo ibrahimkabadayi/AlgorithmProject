@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AlgorithmProject;
+﻿namespace AlgorithmProject;
 public class SearchResult
 {
     public List<int> Occurrences { get; set; } = new();

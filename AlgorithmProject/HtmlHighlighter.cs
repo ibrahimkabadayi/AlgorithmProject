@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace AlgorithmProject;
 
@@ -13,16 +9,13 @@ public static string Highlight(string text, List<int> positions, int patternLeng
     if (positions.Count == 0)
         return WrapInPage(EscapeText(text));
 
-    // Sort positions and merge overlapping intervals
     positions.Sort();
     var intervals = MergeIntervals(positions, patternLength);
 
-    // Build the output by walking through text and inserting tags
     var sb = new StringBuilder(text.Length + intervals.Count * 15);
     int prev = 0;
     foreach (var (start, end) in intervals)
     {
-        // Text before this highlighted region (raw — may contain HTML tags)
         sb.Append(text, prev, start - prev);
         sb.Append("<mark>");
         sb.Append(text, start, end - start);
@@ -34,14 +27,6 @@ public static string Highlight(string text, List<int> positions, int patternLeng
     return WrapInPage(sb.ToString());
 }
 
-// ------------------------------------------------------------------
-// Helpers
-// ------------------------------------------------------------------
-
-/// <summary>
-/// Merge overlapping / adjacent [start, start+len) intervals.
-/// Returns a list of (start, end) pairs.
-/// </summary>
 private static List<(int start, int end)> MergeIntervals(List<int> positions, int len)
 {
     var merged = new List<(int, int)>();
@@ -52,7 +37,7 @@ private static List<(int start, int end)> MergeIntervals(List<int> positions, in
     {
         int s = positions[i];
         int e = s + len;
-        if (s < curEnd)                 // overlapping or adjacent
+        if (s < curEnd)
             curEnd = Math.Max(curEnd, e);
         else
         {
@@ -65,12 +50,7 @@ private static List<(int start, int end)> MergeIntervals(List<int> positions, in
     return merged;
 }
 
-/// <summary>
-/// Escape &amp;, &lt;, &gt; for plain-text display (used only when there
-/// are no matches and the text is treated as plain text).
-/// When the text is already HTML we do NOT escape it.
-/// </summary>
-private static string EscapeText(string text) => text; // raw HTML preserved
+private static string EscapeText(string text) => text;
 
 private static string WrapInPage(string body)
 {

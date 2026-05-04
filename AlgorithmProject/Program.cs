@@ -59,7 +59,6 @@ public class Program
             Console.WriteLine($"Pattern: \"{pattern}\"");
             Console.WriteLine();
 
-            // Write temp files for output
             string outputDir = "test_outputs";
             Directory.CreateDirectory(outputDir);
 
@@ -76,7 +75,6 @@ public class Program
                 new BoyerMoore()
         };
 
-        // Print tables for BM (and Horspool bad char table)
         var horspool = new Horspool();
         Console.WriteLine("--- Bad Symbol (Bad Character) Table ---");
         horspool.PrintBadCharTable(pattern);
@@ -97,7 +95,6 @@ public class Program
             Console.WriteLine();
         }
 
-        // Generate highlighted HTML using BruteForce results (all should match)
         var bf = new BruteForce();
         var bfResult = bf.Search(text, pattern);
         string highlighted = HtmlHighlighter.Highlight(text, bfResult.Occurrences, pattern.Length);
